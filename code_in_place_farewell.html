@@ -1,566 +1,475 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code in Place - Final Section Celebration</title>
+  <style>
+    :root {
+      --bg1: #10162f;
+      --bg2: #5b21b6;
+      --pink: #ff6ec7;
+      --yellow: #ffd166;
+      --green: #6ee7b7;
+      --blue: #93c5fd;
+      --white: #ffffff;
+      --card: rgba(255, 255, 255, 0.12);
+      --border: rgba(255, 255, 255, 0.25);
+    }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #0a0a1a;
-    color: #f0eee8;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      min-height: 100vh;
+      color: var(--white);
+      background:
+        radial-gradient(circle at top left, #ff6ec755, transparent 35%),
+        radial-gradient(circle at top right, #6ee7b755, transparent 30%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow-x: hidden;
+    }
 
-  #canvas-bg {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 0;
-    pointer-events: none;
-  }
+    .confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
 
-  .wrapper {
-    position: relative;
-    z-index: 1;
-    padding: 0 0 80px;
-  }
+    .confetti span {
+      position: absolute;
+      top: -20px;
+      width: 10px;
+      height: 16px;
+      border-radius: 3px;
+      animation: fall linear infinite;
+      opacity: 0.8;
+    }
 
-  /* HERO */
-  .hero {
-    text-align: center;
-    padding: 70px 20px 50px;
-    position: relative;
-  }
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(720deg);
+      }
+    }
 
-  .hero-badge {
-    display: inline-block;
-    background: rgba(255,210,80,0.15);
-    border: 1px solid rgba(255,210,80,0.4);
-    color: #ffd250;
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    padding: 6px 20px;
-    border-radius: 100px;
-    margin-bottom: 28px;
-    font-family: 'DM Sans', sans-serif;
-  }
+    header, section, footer {
+      position: relative;
+      z-index: 1;
+    }
 
-  .hero h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(42px, 8vw, 80px);
-    font-weight: 800;
-    line-height: 1.05;
-    background: linear-gradient(135deg, #ffffff 0%, #ffd250 50%, #ff7eb3 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 18px;
-  }
+    header {
+      text-align: center;
+      padding: 80px 20px 50px;
+    }
 
-  .hero-sub {
-    font-size: 17px;
-    color: rgba(240,238,232,0.65);
-    max-width: 540px;
-    margin: 0 auto 40px;
-    line-height: 1.65;
-  }
+    .badge {
+      display: inline-block;
+      padding: 10px 18px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
 
-  .teacher-sig {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    padding: 10px 22px;
-    border-radius: 100px;
-    font-size: 14px;
-    color: rgba(240,238,232,0.8);
-  }
+    h1 {
+      font-size: clamp(2.4rem, 7vw, 5.5rem);
+      line-height: 1;
+      margin-bottom: 20px;
+      text-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    }
 
-  .teacher-sig span.dot {
-    width: 8px; height: 8px;
-    background: #4ade80;
-    border-radius: 50%;
-    display: inline-block;
-    animation: pulse 2s ease-in-out infinite;
-  }
+    .gradient-text {
+      background: linear-gradient(90deg, var(--yellow), var(--pink), var(--green));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
 
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.8); }
-  }
+    .subtitle {
+      max-width: 850px;
+      margin: 0 auto 30px;
+      font-size: clamp(1.05rem, 2vw, 1.4rem);
+      color: #eef2ff;
+      line-height: 1.7;
+    }
 
-  /* DIVIDER */
-  .section-label {
-    text-align: center;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: rgba(240,238,232,0.35);
-    margin: 10px 0 30px;
-    font-family: 'DM Sans', sans-serif;
-  }
+    .hero-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
 
-  /* STUDENTS GRID */
-  .students-section {
-    padding: 0 24px;
-    max-width: 780px;
-    margin: 0 auto 70px;
-  }
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 24px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
 
-  .students-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 14px;
-  }
+    .btn:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 18px 35px rgba(0,0,0,0.25);
+    }
 
-  .student-card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px;
-    padding: 22px 16px 18px;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), background 0.2s, border-color 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
+    .btn-primary {
+      background: var(--yellow);
+      color: #271500;
+    }
 
-  .student-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 50% 0%, var(--glow) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s;
-    border-radius: 16px;
-  }
+    .btn-secondary {
+      background: var(--card);
+      color: var(--white);
+      border: 1px solid var(--border);
+    }
 
-  .student-card:hover {
-    transform: translateY(-6px) scale(1.03);
-    background: rgba(255,255,255,0.09);
-    border-color: rgba(255,255,255,0.22);
-  }
+    section {
+      width: min(1120px, 92%);
+      margin: 0 auto 60px;
+    }
 
-  .student-card:hover::before { opacity: 1; }
+    .section-title {
+      text-align: center;
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 26px;
+    }
 
-  .avatar {
-    width: 52px; height: 52px;
-    border-radius: 50%;
-    margin: 0 auto 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 18px;
-    color: #fff;
-    position: relative;
-  }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
 
-  .student-name {
-    font-size: 13px;
-    font-weight: 500;
-    color: rgba(240,238,232,0.92);
-    margin-bottom: 5px;
-  }
+    .panel, .student-card, .prompt-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 24px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 18px 45px rgba(0,0,0,0.22);
+    }
 
-  .student-emoji {
-    font-size: 18px;
-  }
+    .panel h3 {
+      color: var(--yellow);
+      margin-bottom: 12px;
+      font-size: 1.3rem;
+    }
 
-  /* MESSAGES SECTION */
-  .messages-section {
-    padding: 0 24px;
-    max-width: 780px;
-    margin: 0 auto 70px;
-  }
+    .panel p, .prompt-card p {
+      color: #eef2ff;
+      line-height: 1.7;
+      font-size: 1.03rem;
+    }
 
-  .message-cards {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
+    .students {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+    }
 
-  .msg-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.09);
-    border-radius: 20px;
-    padding: 28px 30px;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.2s, background 0.2s;
-  }
+    .student-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      transition: transform 0.2s, background 0.2s;
+    }
 
-  .msg-card:hover {
-    transform: translateY(-3px);
-    background: rgba(255,255,255,0.07);
-  }
+    .student-card:hover {
+      transform: translateY(-6px) rotate(-1deg);
+      background: rgba(255,255,255,0.2);
+    }
 
-  .msg-card .accent-bar {
-    position: absolute;
-    top: 0; left: 0;
-    width: 4px; height: 100%;
-    border-radius: 20px 0 0 20px;
-  }
+    .spark {
+      font-size: 1.4rem;
+    }
 
-  .msg-icon {
-    font-size: 32px;
-    margin-bottom: 14px;
-    display: block;
-  }
+    .quote-box {
+      text-align: center;
+      padding: 36px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, rgba(255, 209, 102, .22), rgba(255, 110, 199, .18));
+      border: 1px solid var(--border);
+    }
 
-  .msg-card h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 17px;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 10px;
-  }
+    .quote {
+      font-size: clamp(1.5rem, 3vw, 2.4rem);
+      font-weight: 900;
+      line-height: 1.25;
+      margin-bottom: 16px;
+    }
 
-  .msg-card p {
-    font-size: 15px;
-    color: rgba(240,238,232,0.7);
-    line-height: 1.7;
-  }
+    .small {
+      color: #dbeafe;
+      font-size: 1rem;
+    }
 
-  /* OPENER SECTION */
-  .opener-section {
-    padding: 0 24px;
-    max-width: 780px;
-    margin: 0 auto 70px;
-  }
+    .prompt-card {
+      text-align: center;
+      min-height: 170px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-  .opener-box {
-    background: linear-gradient(135deg, rgba(255,210,80,0.08) 0%, rgba(255,126,179,0.08) 100%);
-    border: 1px solid rgba(255,210,80,0.25);
-    border-radius: 24px;
-    padding: 40px 36px;
-    text-align: center;
-  }
+    .prompt-card h3 {
+      margin-bottom: 12px;
+      color: var(--green);
+    }
 
-  .opener-box h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: 26px;
-    font-weight: 800;
-    color: #ffffff;
-    margin-bottom: 18px;
-  }
+    .code-box {
+      background: rgba(3, 7, 18, 0.65);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 24px;
+      padding: 24px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, monospace;
+      line-height: 1.7;
+      color: #d1fae5;
+    }
 
-  .opener-box .opener-lead {
-    font-size: 16px;
-    color: rgba(240,238,232,0.7);
-    line-height: 1.75;
-    margin-bottom: 28px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+    .timeline {
+      display: grid;
+      gap: 18px;
+    }
 
-  .tips-list {
-    list-style: none;
-    text-align: left;
-    max-width: 520px;
-    margin: 0 auto;
-  }
+    .step {
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
 
-  .tips-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    font-size: 15px;
-    color: rgba(240,238,232,0.75);
-    line-height: 1.6;
-  }
+    .circle {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--yellow);
+      color: #1f1300;
+      font-weight: 900;
+      font-size: 1.4rem;
+    }
 
-  .tips-list li:last-child { border-bottom: none; }
+    footer {
+      text-align: center;
+      padding: 40px 20px 70px;
+      color: #e0e7ff;
+    }
 
-  .tip-num {
-    background: rgba(255,210,80,0.2);
-    color: #ffd250;
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 12px;
-    min-width: 26px; height: 26px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
+    .floating-message {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      max-width: 330px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      backdrop-filter: blur(16px);
+      z-index: 2;
+      box-shadow: 0 14px 35px rgba(0,0,0,0.3);
+    }
 
-  /* QUOTE */
-  .quote-section {
-    padding: 0 24px;
-    max-width: 780px;
-    margin: 0 auto 70px;
-  }
+    .floating-message strong {
+      color: var(--yellow);
+    }
 
-  .quote-box {
-    border-left: 3px solid #ffd250;
-    padding: 24px 30px;
-    background: rgba(255,210,80,0.05);
-    border-radius: 0 16px 16px 0;
-  }
-
-  .quote-box blockquote {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: #ffffff;
-    line-height: 1.45;
-    margin-bottom: 12px;
-  }
-
-  .quote-box .quote-attr {
-    font-size: 13px;
-    color: rgba(240,238,232,0.45);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-
-  /* FOOTER */
-  .footer {
-    text-align: center;
-    padding: 40px 24px 20px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    max-width: 780px;
-    margin: 0 auto;
-  }
-
-  .footer h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: 32px;
-    font-weight: 800;
-    background: linear-gradient(135deg, #ffd250, #ff7eb3);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 14px;
-  }
-
-  .footer p {
-    font-size: 15px;
-    color: rgba(240,238,232,0.55);
-    max-width: 480px;
-    margin: 0 auto;
-    line-height: 1.7;
-  }
-
-  /* Confetti particle */
-  .confetti-piece {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 999;
-    border-radius: 2px;
-  }
-
-  @keyframes fall {
-    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-  }
-</style>
+    @media (max-width: 640px) {
+      header {
+        padding-top: 48px;
+      }
+      .floating-message {
+        position: static;
+        margin: 20px auto 40px;
+        width: min(92%, 330px);
+      }
+      .step {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="confetti" id="confetti"></div>
 
-<canvas id="canvas-bg"></canvas>
-
-<div class="wrapper">
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-badge">🎓 Code in Place · Final Week</div>
-    <h1>You Did It,<br>Coders!</h1>
-    <p class="hero-sub">From your very first line of Python to here — this is not just an ending, it's the beginning of something incredible.</p>
-    <div class="teacher-sig">
-      <span class="dot"></span>
-      <span>Your section leader is proud of every single one of you</span>
+  <header>
+    <div class="badge">🎓 Code in Place · Final Week · Section 6</div>
+    <h1>We Made It, <span class="gradient-text">Team!</span> 🚀</h1>
+    <p class="subtitle">
+      Today is our last section together, but it is not the end. It is the beginning of your coding journey.
+      You learned to think, debug, build, ask questions, and keep going.
+    </p>
+    <div class="hero-buttons">
+      <button class="btn btn-primary" onclick="document.getElementById('students').scrollIntoView({behavior:'smooth'})">Celebrate Students 🎉</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('share').scrollIntoView({behavior:'smooth'})">Share Your Thoughts 💬</button>
     </div>
-  </section>
+  </header>
 
-  <!-- STUDENTS -->
-  <section class="students-section">
-    <p class="section-label">— The Dream Team —</p>
-    <div class="students-grid" id="studentGrid"></div>
-  </section>
-
-  <!-- MOTIVATION CARDS -->
-  <section class="messages-section">
-    <p class="section-label">— Words For The Journey —</p>
-    <div class="message-cards">
-
-      <div class="msg-card">
-        <div class="accent-bar" style="background: linear-gradient(180deg,#ffd250,#ff9a3c);"></div>
-        <span class="msg-icon">🚀</span>
-        <h3>Every expert was once a beginner</h3>
-        <p>The confusion, the bugs, the "why doesn't this work?!" moments — that's not failure. That's exactly what learning looks like. You've been doing the hardest thing: thinking like a computer. And you've been amazing at it.</p>
-      </div>
-
-      <div class="msg-card">
-        <div class="accent-bar" style="background: linear-gradient(180deg,#7c3aed,#a855f7);"></div>
-        <span class="msg-icon">🧠</span>
-        <h3>Coding is a superpower — and you have it now</h3>
-        <p>You can look at a problem and break it into pieces. You can build things that didn't exist before. You can automate, create, analyze, and imagine. That's not a small thing. That's a genuine skill that opens real doors.</p>
-      </div>
-
-      <div class="msg-card">
-        <div class="accent-bar" style="background: linear-gradient(180deg,#0ea5e9,#38bdf8);"></div>
-        <span class="msg-icon">💡</span>
-        <h3>The real journey starts now</h3>
-        <p>This section was the spark. Now keep the fire going. Build something silly, solve a problem that bothers you, contribute to open source, take another course — whatever keeps you curious. The community is enormous and welcoming.</p>
-      </div>
-
-      <div class="msg-card">
-        <div class="accent-bar" style="background: linear-gradient(180deg,#10b981,#34d399);"></div>
-        <span class="msg-icon">🤝</span>
-        <h3>You are not alone</h3>
-        <p>Every coder Googles things. Every developer gets stuck. Even the best programmers in the world ask for help, read documentation, and feel imposter syndrome. The difference? They keep going. And so should you.</p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- OPENING UP / ADVICE -->
-  <section class="opener-section">
-    <p class="section-label">— How to Keep Growing —</p>
-    <div class="opener-box">
-      <h2>Open Up. Keep Connecting. 🌐</h2>
-      <p class="opener-lead">One of the most powerful things you can do after this course is open up — share your work, ask your questions out loud, and be part of the coding community.</p>
-      <ul class="tips-list">
-        <li>
-          <span class="tip-num">01</span>
-          <span><strong style="color:#ffd250;">Share your projects</strong> — even the small ones. Put them on GitHub. Show friends. Being visible teaches you more than staying hidden.</span>
-        </li>
-        <li>
-          <span class="tip-num">02</span>
-          <span><strong style="color:#ffd250;">Ask "stupid" questions</strong> — there are none. Every question you're afraid to ask, ten other people needed to hear the answer. Be brave and ask.</span>
-        </li>
-        <li>
-          <span class="tip-num">03</span>
-          <span><strong style="color:#ffd250;">Join communities</strong> — Discord servers, Reddit, local meetups, online forums. Programmers are genuinely helpful. Seek them out.</span>
-        </li>
-        <li>
-          <span class="tip-num">04</span>
-          <span><strong style="color:#ffd250;">Teach what you know</strong> — explaining something to another person is the fastest way to deeply understand it yourself. Mentor someone.</span>
-        </li>
-        <li>
-          <span class="tip-num">05</span>
-          <span><strong style="color:#ffd250;">Be patient with yourself</strong> — growth isn't linear. Some days will feel like you forgot everything. Those days are part of the process too. Trust it.</span>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- QUOTE -->
-  <section class="quote-section">
+  <section>
     <div class="quote-box">
-      <blockquote>"The best time to plant a tree was 20 years ago. The second best time is now."</blockquote>
-      <div class="quote-attr">— Chinese Proverb — start coding something today</div>
+      <div class="quote">“Programming is not about knowing everything. It is about being brave enough to try.”</div>
+      <p class="small">Every bug you fixed made you stronger. Every question you asked helped someone else too.</p>
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <div class="footer">
-    <h2>See You in the Future! 🌟</h2>
-    <p>Whatever you build next, wherever code takes you — remember this section, remember these people, and remember: you belong in tech. Go make something wonderful.</p>
+  <section>
+    <h2 class="section-title">Today’s Adventure 🧭</h2>
+    <div class="grid">
+      <div class="panel">
+        <h3>1. Index Game</h3>
+        <p>Warm up with list indexes and remember: Python starts counting from 0.</p>
+      </div>
+      <div class="panel">
+        <h3>2. List Practice</h3>
+        <p>Create, update, print, and understand lists using real Python code.</p>
+      </div>
+      <div class="panel">
+        <h3>3. Heads Up Game</h3>
+        <p>Build a fun console game using files, lists, random words, and loops.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="students">
+    <h2 class="section-title">Our Amazing Students 🌟</h2>
+    <div class="students">
+      <div class="student-card"><span class="spark">✨</span><span>Muhammad Jawad</span></div>
+      <div class="student-card"><span class="spark">✨</span><span>Evelyn</span></div>
+      <div class="student-card"><span class="spark">✨</span><span>Gokul Rajan</span></div>
+      <div class="student-card"><span class="spark">✨</span><span>Christian</span></div>
+      <div class="student-card"><span class="spark">✨</span><span>Atta Ur Rehman</span></div>
+      <div class="student-card"><span class="spark">✨</span><span>Cayla</span></div>
+      <div class="student-card"><span class="spark">✨</span><span>Vishnu</span></div>
+      <div class="student-card"><span class="spark">✨</span><span>Rhitam</span></div>
+      <div class="student-card"><span class="spark">✨</span><span>Mahavia Qureshi</span></div>
+      <div class="student-card"><span class="spark">✨</span><span>Dina</span></div>
+      <div class="student-card"><span class="spark">✨</span><span>Harshita Tiwari</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Look How Far You Came 💪</h2>
+    <div class="timeline">
+      <div class="step panel">
+        <div class="circle">1</div>
+        <div>
+          <h3>You started with Karel</h3>
+          <p>You learned how to give clear instructions and break problems into steps.</p>
+        </div>
+      </div>
+      <div class="step panel">
+        <div class="circle">2</div>
+        <div>
+          <h3>You learned Python basics</h3>
+          <p>Variables, loops, conditionals, functions, and problem solving became part of your toolkit.</p>
+        </div>
+      </div>
+      <div class="step panel">
+        <div class="circle">3</div>
+        <div>
+          <h3>You are now building games</h3>
+          <p>Today you will use lists, files, randomness, and loops to create something interactive and fun.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="share">
+    <h2 class="section-title">A Gentle Space to Share 💬</h2>
+    <div class="grid">
+      <div class="prompt-card">
+        <h3>One-word answer</h3>
+        <p>What is one word that describes your Code in Place journey?</p>
+      </div>
+      <div class="prompt-card">
+        <h3>Quick reaction</h3>
+        <p>Use an emoji: How do you feel about coding now?</p>
+      </div>
+      <div class="prompt-card">
+        <h3>Small reflection</h3>
+        <p>What is one thing you are proud of learning?</p>
+      </div>
+      <div class="prompt-card">
+        <h3>Future dream</h3>
+        <p>What is one small project you want to build next?</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Today’s Code Reminder 🧠</h2>
+    <div class="code-box">
+<pre>fruit_list = ["apple", "banana", "orange", "grape", "pineapple"]
+
+print(len(fruit_list))
+
+fruit_list.append("mango")
+
+print(fruit_list)</pre>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Final Advice from Your Instructor 🌱</h2>
+    <div class="grid">
+      <div class="panel">
+        <h3>Speak even if you are unsure</h3>
+        <p>Your idea does not need to be perfect. Sharing a half idea can help the whole group learn.</p>
+      </div>
+      <div class="panel">
+        <h3>Bugs are normal</h3>
+        <p>Every programmer sees errors. The skill is learning how to read them, test, and try again.</p>
+      </div>
+      <div class="panel">
+        <h3>Keep building</h3>
+        <p>Small projects are powerful. A calculator, quiz game, habit tracker, or mini website can teach you a lot.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="quote-box">
+      <div class="quote">Thank you for being part of this journey. Keep coding, keep asking, and keep believing in yourself. 💙</div>
+      <p class="small">This is not goodbye to programming. This is your launch day.</p>
+    </div>
+  </section>
+
+  <div class="floating-message">
+    <strong>For shy students:</strong><br />
+    You can share with one word, one emoji, or one number. Your voice matters, even when it is small.
   </div>
 
-</div>
+  <footer>
+    Made with ❤️ for Code in Place Section 6 · Lists, Dictionaries, and New Beginnings
+  </footer>
 
-<script>
-const students = [
-  { name: "Muhammad Jawad", initials: "MJ", color: "#7c3aed", glow: "rgba(124,58,237,0.3)", emoji: "⚡" },
-  { name: "Evelyn", initials: "EV", color: "#ec4899", glow: "rgba(236,72,153,0.3)", emoji: "🌸" },
-  { name: "Gokul Rajan", initials: "GR", color: "#0ea5e9", glow: "rgba(14,165,233,0.3)", emoji: "🔥" },
-  { name: "Christian", initials: "CH", color: "#10b981", glow: "rgba(16,185,129,0.3)", emoji: "💻" },
-  { name: "Atta Ur Rehman", initials: "AR", color: "#f59e0b", glow: "rgba(245,158,11,0.3)", emoji: "🚀" },
-  { name: "Cayla", initials: "CA", color: "#ef4444", glow: "rgba(239,68,68,0.3)", emoji: "✨" },
-  { name: "Vishnu", initials: "VI", color: "#8b5cf6", glow: "rgba(139,92,246,0.3)", emoji: "🎯" },
-  { name: "Rhitam", initials: "RH", color: "#06b6d4", glow: "rgba(6,182,212,0.3)", emoji: "🌊" },
-  { name: "Mahavia Qureshi", initials: "MQ", color: "#f97316", glow: "rgba(249,115,22,0.3)", emoji: "🌟" },
-  { name: "Dina", initials: "DI", color: "#84cc16", glow: "rgba(132,204,22,0.3)", emoji: "💫" },
-  { name: "Harshita Tiwari", initials: "HT", color: "#e879f9", glow: "rgba(232,121,249,0.3)", emoji: "🎉" }
-];
+  <script>
+    const confetti = document.getElementById("confetti");
+    const colors = ["#ffd166", "#ff6ec7", "#6ee7b7", "#93c5fd", "#ffffff"];
 
-const grid = document.getElementById('studentGrid');
-students.forEach(s => {
-  const card = document.createElement('div');
-  card.className = 'student-card';
-  card.style.setProperty('--glow', s.glow);
-  card.innerHTML = `
-    <div class="avatar" style="background: linear-gradient(135deg, ${s.color}, ${s.color}99);">
-      ${s.initials}
-    </div>
-    <div class="student-name">${s.name}</div>
-    <div class="student-emoji">${s.emoji}</div>
-  `;
-  card.addEventListener('click', () => launchConfetti(s.color));
-  grid.appendChild(card);
-});
-
-function launchConfetti(color) {
-  const colors = [color, '#ffd250', '#ff7eb3', '#a78bfa', '#34d399'];
-  for (let i = 0; i < 40; i++) {
-    const piece = document.createElement('div');
-    piece.className = 'confetti-piece';
-    piece.style.left = Math.random() * 100 + 'vw';
-    piece.style.top = '-20px';
-    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-    piece.style.width = (6 + Math.random() * 8) + 'px';
-    piece.style.height = (6 + Math.random() * 8) + 'px';
-    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-    const duration = 1.5 + Math.random() * 2;
-    const delay = Math.random() * 0.5;
-    piece.style.animation = `fall ${duration}s ${delay}s ease-in forwards`;
-    document.body.appendChild(piece);
-    setTimeout(() => piece.remove(), (duration + delay) * 1000 + 100);
-  }
-}
-
-// Starfield canvas
-const canvas = document.getElementById('canvas-bg');
-const ctx = canvas.getContext('2d');
-let W, H, stars = [];
-
-function resize() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-  stars = Array.from({ length: 120 }, () => ({
-    x: Math.random() * W,
-    y: Math.random() * H,
-    r: Math.random() * 1.5 + 0.3,
-    a: Math.random(),
-    speed: 0.003 + Math.random() * 0.007
-  }));
-}
-
-resize();
-window.addEventListener('resize', resize);
-
-function drawStars() {
-  ctx.clearRect(0, 0, W, H);
-  stars.forEach(s => {
-    s.a += s.speed;
-    const alpha = (Math.sin(s.a) + 1) / 2 * 0.6 + 0.1;
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-    ctx.fill();
-  });
-  requestAnimationFrame(drawStars);
-}
-drawStars();
-</script>
+    for (let i = 0; i < 70; i++) {
+      const piece = document.createElement("span");
+      piece.style.left = Math.random() * 100 + "vw";
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.animationDuration = 4 + Math.random() * 6 + "s";
+      piece.style.animationDelay = Math.random() * 5 + "s";
+      piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+      confetti.appendChild(piece);
+    }
+  </script>
 </body>
 </html>
