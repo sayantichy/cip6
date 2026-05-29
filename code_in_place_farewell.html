@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0a0a1a;
+    color: #f0eee8;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  #canvas-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    padding: 0 0 80px;
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 70px 20px 50px;
+    position: relative;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,210,80,0.15);
+    border: 1px solid rgba(255,210,80,0.4);
+    color: #ffd250;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 6px 20px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(42px, 8vw, 80px);
+    font-weight: 800;
+    line-height: 1.05;
+    background: linear-gradient(135deg, #ffffff 0%, #ffd250 50%, #ff7eb3 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 18px;
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: rgba(240,238,232,0.65);
+    max-width: 540px;
+    margin: 0 auto 40px;
+    line-height: 1.65;
+  }
+
+  .teacher-sig {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 10px 22px;
+    border-radius: 100px;
+    font-size: 14px;
+    color: rgba(240,238,232,0.8);
+  }
+
+  .teacher-sig span.dot {
+    width: 8px; height: 8px;
+    background: #4ade80;
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* DIVIDER */
+  .section-label {
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(240,238,232,0.35);
+    margin: 10px 0 30px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* STUDENTS GRID */
+  .students-section {
+    padding: 0 24px;
+    max-width: 780px;
+    margin: 0 auto 70px;
+  }
+
+  .students-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px;
+  }
+
+  .student-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 22px 16px 18px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), background 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .student-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, var(--glow) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 16px;
+  }
+
+  .student-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    background: rgba(255,255,255,0.09);
+    border-color: rgba(255,255,255,0.22);
+  }
+
+  .student-card:hover::before { opacity: 1; }
+
+  .avatar {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: #fff;
+    position: relative;
+  }
+
+  .student-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(240,238,232,0.92);
+    margin-bottom: 5px;
+  }
+
+  .student-emoji {
+    font-size: 18px;
+  }
+
+  /* MESSAGES SECTION */
+  .messages-section {
+    padding: 0 24px;
+    max-width: 780px;
+    margin: 0 auto 70px;
+  }
+
+  .message-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .msg-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 20px;
+    padding: 28px 30px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, background 0.2s;
+  }
+
+  .msg-card:hover {
+    transform: translateY(-3px);
+    background: rgba(255,255,255,0.07);
+  }
+
+  .msg-card .accent-bar {
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    border-radius: 20px 0 0 20px;
+  }
+
+  .msg-icon {
+    font-size: 32px;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .msg-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+
+  .msg-card p {
+    font-size: 15px;
+    color: rgba(240,238,232,0.7);
+    line-height: 1.7;
+  }
+
+  /* OPENER SECTION */
+  .opener-section {
+    padding: 0 24px;
+    max-width: 780px;
+    margin: 0 auto 70px;
+  }
+
+  .opener-box {
+    background: linear-gradient(135deg, rgba(255,210,80,0.08) 0%, rgba(255,126,179,0.08) 100%);
+    border: 1px solid rgba(255,210,80,0.25);
+    border-radius: 24px;
+    padding: 40px 36px;
+    text-align: center;
+  }
+
+  .opener-box h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 18px;
+  }
+
+  .opener-box .opener-lead {
+    font-size: 16px;
+    color: rgba(240,238,232,0.7);
+    line-height: 1.75;
+    margin-bottom: 28px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .tips-list {
+    list-style: none;
+    text-align: left;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .tips-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    font-size: 15px;
+    color: rgba(240,238,232,0.75);
+    line-height: 1.6;
+  }
+
+  .tips-list li:last-child { border-bottom: none; }
+
+  .tip-num {
+    background: rgba(255,210,80,0.2);
+    color: #ffd250;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 12px;
+    min-width: 26px; height: 26px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* QUOTE */
+  .quote-section {
+    padding: 0 24px;
+    max-width: 780px;
+    margin: 0 auto 70px;
+  }
+
+  .quote-box {
+    border-left: 3px solid #ffd250;
+    padding: 24px 30px;
+    background: rgba(255,210,80,0.05);
+    border-radius: 0 16px 16px 0;
+  }
+
+  .quote-box blockquote {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.45;
+    margin-bottom: 12px;
+  }
+
+  .quote-box .quote-attr {
+    font-size: 13px;
+    color: rgba(240,238,232,0.45);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 40px 24px 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .footer h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffd250, #ff7eb3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 14px;
+  }
+
+  .footer p {
+    font-size: 15px;
+    color: rgba(240,238,232,0.55);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* Confetti particle */
+  .confetti-piece {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999;
+    border-radius: 2px;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="canvas-bg"></canvas>
+
+<div class="wrapper">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">🎓 Code in Place · Final Week</div>
+    <h1>You Did It,<br>Coders!</h1>
+    <p class="hero-sub">From your very first line of Python to here — this is not just an ending, it's the beginning of something incredible.</p>
+    <div class="teacher-sig">
+      <span class="dot"></span>
+      <span>Your section leader is proud of every single one of you</span>
+    </div>
+  </section>
+
+  <!-- STUDENTS -->
+  <section class="students-section">
+    <p class="section-label">— The Dream Team —</p>
+    <div class="students-grid" id="studentGrid"></div>
+  </section>
+
+  <!-- MOTIVATION CARDS -->
+  <section class="messages-section">
+    <p class="section-label">— Words For The Journey —</p>
+    <div class="message-cards">
+
+      <div class="msg-card">
+        <div class="accent-bar" style="background: linear-gradient(180deg,#ffd250,#ff9a3c);"></div>
+        <span class="msg-icon">🚀</span>
+        <h3>Every expert was once a beginner</h3>
+        <p>The confusion, the bugs, the "why doesn't this work?!" moments — that's not failure. That's exactly what learning looks like. You've been doing the hardest thing: thinking like a computer. And you've been amazing at it.</p>
+      </div>
+
+      <div class="msg-card">
+        <div class="accent-bar" style="background: linear-gradient(180deg,#7c3aed,#a855f7);"></div>
+        <span class="msg-icon">🧠</span>
+        <h3>Coding is a superpower — and you have it now</h3>
+        <p>You can look at a problem and break it into pieces. You can build things that didn't exist before. You can automate, create, analyze, and imagine. That's not a small thing. That's a genuine skill that opens real doors.</p>
+      </div>
+
+      <div class="msg-card">
+        <div class="accent-bar" style="background: linear-gradient(180deg,#0ea5e9,#38bdf8);"></div>
+        <span class="msg-icon">💡</span>
+        <h3>The real journey starts now</h3>
+        <p>This section was the spark. Now keep the fire going. Build something silly, solve a problem that bothers you, contribute to open source, take another course — whatever keeps you curious. The community is enormous and welcoming.</p>
+      </div>
+
+      <div class="msg-card">
+        <div class="accent-bar" style="background: linear-gradient(180deg,#10b981,#34d399);"></div>
+        <span class="msg-icon">🤝</span>
+        <h3>You are not alone</h3>
+        <p>Every coder Googles things. Every developer gets stuck. Even the best programmers in the world ask for help, read documentation, and feel imposter syndrome. The difference? They keep going. And so should you.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- OPENING UP / ADVICE -->
+  <section class="opener-section">
+    <p class="section-label">— How to Keep Growing —</p>
+    <div class="opener-box">
+      <h2>Open Up. Keep Connecting. 🌐</h2>
+      <p class="opener-lead">One of the most powerful things you can do after this course is open up — share your work, ask your questions out loud, and be part of the coding community.</p>
+      <ul class="tips-list">
+        <li>
+          <span class="tip-num">01</span>
+          <span><strong style="color:#ffd250;">Share your projects</strong> — even the small ones. Put them on GitHub. Show friends. Being visible teaches you more than staying hidden.</span>
+        </li>
+        <li>
+          <span class="tip-num">02</span>
+          <span><strong style="color:#ffd250;">Ask "stupid" questions</strong> — there are none. Every question you're afraid to ask, ten other people needed to hear the answer. Be brave and ask.</span>
+        </li>
+        <li>
+          <span class="tip-num">03</span>
+          <span><strong style="color:#ffd250;">Join communities</strong> — Discord servers, Reddit, local meetups, online forums. Programmers are genuinely helpful. Seek them out.</span>
+        </li>
+        <li>
+          <span class="tip-num">04</span>
+          <span><strong style="color:#ffd250;">Teach what you know</strong> — explaining something to another person is the fastest way to deeply understand it yourself. Mentor someone.</span>
+        </li>
+        <li>
+          <span class="tip-num">05</span>
+          <span><strong style="color:#ffd250;">Be patient with yourself</strong> — growth isn't linear. Some days will feel like you forgot everything. Those days are part of the process too. Trust it.</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="quote-section">
+    <div class="quote-box">
+      <blockquote>"The best time to plant a tree was 20 years ago. The second best time is now."</blockquote>
+      <div class="quote-attr">— Chinese Proverb — start coding something today</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <h2>See You in the Future! 🌟</h2>
+    <p>Whatever you build next, wherever code takes you — remember this section, remember these people, and remember: you belong in tech. Go make something wonderful.</p>
+  </div>
+
+</div>
+
+<script>
+const students = [
+  { name: "Muhammad Jawad", initials: "MJ", color: "#7c3aed", glow: "rgba(124,58,237,0.3)", emoji: "⚡" },
+  { name: "Evelyn", initials: "EV", color: "#ec4899", glow: "rgba(236,72,153,0.3)", emoji: "🌸" },
+  { name: "Gokul Rajan", initials: "GR", color: "#0ea5e9", glow: "rgba(14,165,233,0.3)", emoji: "🔥" },
+  { name: "Christian", initials: "CH", color: "#10b981", glow: "rgba(16,185,129,0.3)", emoji: "💻" },
+  { name: "Atta Ur Rehman", initials: "AR", color: "#f59e0b", glow: "rgba(245,158,11,0.3)", emoji: "🚀" },
+  { name: "Cayla", initials: "CA", color: "#ef4444", glow: "rgba(239,68,68,0.3)", emoji: "✨" },
+  { name: "Vishnu", initials: "VI", color: "#8b5cf6", glow: "rgba(139,92,246,0.3)", emoji: "🎯" },
+  { name: "Rhitam", initials: "RH", color: "#06b6d4", glow: "rgba(6,182,212,0.3)", emoji: "🌊" },
+  { name: "Mahavia Qureshi", initials: "MQ", color: "#f97316", glow: "rgba(249,115,22,0.3)", emoji: "🌟" },
+  { name: "Dina", initials: "DI", color: "#84cc16", glow: "rgba(132,204,22,0.3)", emoji: "💫" },
+  { name: "Harshita Tiwari", initials: "HT", color: "#e879f9", glow: "rgba(232,121,249,0.3)", emoji: "🎉" }
+];
+
+const grid = document.getElementById('studentGrid');
+students.forEach(s => {
+  const card = document.createElement('div');
+  card.className = 'student-card';
+  card.style.setProperty('--glow', s.glow);
+  card.innerHTML = `
+    <div class="avatar" style="background: linear-gradient(135deg, ${s.color}, ${s.color}99);">
+      ${s.initials}
+    </div>
+    <div class="student-name">${s.name}</div>
+    <div class="student-emoji">${s.emoji}</div>
+  `;
+  card.addEventListener('click', () => launchConfetti(s.color));
+  grid.appendChild(card);
+});
+
+function launchConfetti(color) {
+  const colors = [color, '#ffd250', '#ff7eb3', '#a78bfa', '#34d399'];
+  for (let i = 0; i < 40; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + 'vw';
+    piece.style.top = '-20px';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.width = (6 + Math.random() * 8) + 'px';
+    piece.style.height = (6 + Math.random() * 8) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    const duration = 1.5 + Math.random() * 2;
+    const delay = Math.random() * 0.5;
+    piece.style.animation = `fall ${duration}s ${delay}s ease-in forwards`;
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), (duration + delay) * 1000 + 100);
+  }
+}
+
+// Starfield canvas
+const canvas = document.getElementById('canvas-bg');
+const ctx = canvas.getContext('2d');
+let W, H, stars = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  stars = Array.from({ length: 120 }, () => ({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    r: Math.random() * 1.5 + 0.3,
+    a: Math.random(),
+    speed: 0.003 + Math.random() * 0.007
+  }));
+}
+
+resize();
+window.addEventListener('resize', resize);
+
+function drawStars() {
+  ctx.clearRect(0, 0, W, H);
+  stars.forEach(s => {
+    s.a += s.speed;
+    const alpha = (Math.sin(s.a) + 1) / 2 * 0.6 + 0.1;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+</script>
+</body>
+</html>
