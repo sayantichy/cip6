@@ -288,6 +288,16 @@
       color: var(--yellow);
     }
 
+
+    .prompt-card:hover, .panel:hover {
+      transform: translateY(-6px);
+      background: rgba(255,255,255,0.18);
+    }
+
+    .prompt-card, .panel {
+      transition: transform 0.2s, background 0.2s;
+    }
+
     @media (max-width: 640px) {
       header {
         padding-top: 48px;
@@ -326,23 +336,6 @@
     </div>
   </section>
 
-  <section>
-    <h2 class="section-title">Today’s Adventure 🧭</h2>
-    <div class="grid">
-      <div class="panel">
-        <h3>1. Index Game</h3>
-        <p>Warm up with list indexes and remember: Python starts counting from 0.</p>
-      </div>
-      <div class="panel">
-        <h3>2. List Practice</h3>
-        <p>Create, update, print, and understand lists using real Python code.</p>
-      </div>
-      <div class="panel">
-        <h3>3. Heads Up Game</h3>
-        <p>Build a fun console game using files, lists, random words, and loops.</p>
-      </div>
-    </div>
-  </section>
 
   <section id="students">
     <h2 class="section-title">Our Amazing Students 🌟</h2>
@@ -360,6 +353,58 @@
       <div class="student-card"><span class="spark">✨</span><span>Harshita Tiwari</span></div>
     </div>
   </section>
+
+  <section>
+    <h2 class="section-title">Final Week Fun Zone 🎈</h2>
+    <div class="grid">
+      <div class="prompt-card">
+        <h3>Bug Confession 😅</h3>
+        <p>Share one funny bug you had. Example: “I forgot a colon” or “My loop never stopped.”</p>
+      </div>
+      <div class="prompt-card">
+        <h3>Emoji Check-in 😎</h3>
+        <p>Describe your Code in Place journey using only one emoji.</p>
+      </div>
+      <div class="prompt-card">
+        <h3>Python Superpower 🐍</h3>
+        <p>If Python gave you one superpower, what would it be?</p>
+      </div>
+      <div class="prompt-card">
+        <h3>One-word Roast 🔥</h3>
+        <p>Roast one Python concept in one word. Keep it kind, keep it funny!</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Tiny Games for Shy Legends 🎮</h2>
+    <div class="grid">
+      <div class="panel">
+        <h3>1. Vote With Fingers</h3>
+        <p>Show 1–5 fingers on camera or type a number in chat: how confident do you feel about lists?</p>
+      </div>
+      <div class="panel">
+        <h3>2. Wrong Answer Only</h3>
+        <p>Question: What is a list? Students give silly wrong answers first. Example: “A banana with indexes.”</p>
+      </div>
+      <div class="panel">
+        <h3>3. Python Awards</h3>
+        <p>Give awards like “Best Debugger”, “Most Creative Idea”, “Bravest Question”, and “Loop Master”.</p>
+      </div>
+      <div class="panel">
+        <h3>4. Future Me Message</h3>
+        <p>Each student writes one sentence to their future coding self: “Dear future me, keep building...”</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="quote-box">
+      <div class="quote">Final Challenge: Say one tiny thing. One word is enough. One emoji is enough. Your voice matters. 🌟</div>
+      <p class="small">No pressure to be perfect. This is a safe space to share, laugh, and celebrate.</p>
+    </div>
+  </section>
+
 
   <section>
     <h2 class="section-title">Look How Far You Came 💪</h2>
@@ -410,18 +455,6 @@
     </div>
   </section>
 
-  <section>
-    <h2 class="section-title">Today’s Code Reminder 🧠</h2>
-    <div class="code-box">
-<pre>fruit_list = ["apple", "banana", "orange", "grape", "pineapple"]
-
-print(len(fruit_list))
-
-fruit_list.append("mango")
-
-print(fruit_list)</pre>
-    </div>
-  </section>
 
   <section>
     <h2 class="section-title">Final Advice from Your Instructor 🌱</h2>
